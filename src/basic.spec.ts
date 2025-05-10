@@ -1,4 +1,4 @@
-import { getMinObj, swap } from "./basic";
+import { getMinObj, swap } from "./basic.js";
 
 it("gets the smallest value", () => {
     expect(getMinObj([2, 1, 3], v => v)).toBe(1);

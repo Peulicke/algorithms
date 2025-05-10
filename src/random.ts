@@ -1,4 +1,4 @@
-import { swap } from "./basic";
+import { swap } from "./basic.js";
 
 export const randomInt = (random: () => number) => (min: number, max: number) =>
     Math.floor(random() * (max - min + 1)) + min;

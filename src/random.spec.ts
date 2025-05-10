@@ -1,4 +1,4 @@
-import { shuffle } from "./random";
+import { shuffle } from "./random.js";
 
 it("shuffles", () => {
     const array = [1, 2, 3, 4];
