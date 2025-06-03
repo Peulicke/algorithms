@@ -1,17 +1,29 @@
-export const getKeys = <Key extends string, T>(obj: Record<Key, T>) => (Object.keys(obj) as Key[]).sort();
+type Key<T extends object> = keyof T;
 
-export const getEntries = <Key extends string, T>(obj: Record<Key, T>) =>
-    (Object.entries(obj) as [Key, T][]).sort(([a], [b]) => a.localeCompare(b));
+type Value<T extends object> = T[Key<T>];
 
-export const getValues = <Key extends string, T>(obj: Record<Key, T>) => getEntries(obj).map(([_, value]) => value);
+type Entry<T extends object> = [Key<T>, Value<T>];
 
-export const fromEntries = <Key extends string, T>(entries: [Key, T][]) =>
-    Object.fromEntries(entries) as Record<Key, T>;
+export const getKeys = <T extends object>(obj: T): Key<T>[] => (Object.keys(obj) as Key<T>[]).sort();
 
-export const mapObj = <Key extends string, T, U>(obj: Record<Key, T>, func: (entry: [Key, T], i: number) => [Key, U]) =>
-    fromEntries(getEntries(obj).map(([key, value], i) => func([key, value], i)));
+export const getEntries = <T extends object>(obj: T): Entry<T>[] => {
+    return (Object.entries(obj) as Entry<T>[]).sort(([a], [b]) => {
+        if (typeof a !== typeof b) return (typeof a).localeCompare(typeof b);
+        if (typeof a === "number" && typeof b === "number") return a - b;
+        return String(a).localeCompare(String(b));
+    });
+};
 
-export const mapObjValues = <Key extends string, T, U>(
-    obj: Record<Key, T>,
-    func: (value: T, key: Key, i: number) => U
+export const getValues = <T extends object>(obj: T): Value<T>[] => getEntries(obj).map(([_, value]) => value);
+
+export const fromEntries = <T extends object>(entries: Entry<T>[]) => Object.fromEntries(entries) as T;
+
+export const mapObj = <T extends object, U extends Value<T>>(
+    obj: T,
+    func: (entry: Entry<T>, i: number) => [Key<T>, U]
+) => fromEntries(getEntries(obj).map(([key, value], i) => func([key, value], i)));
+
+export const mapObjValues = <T extends object, U extends Value<T>>(
+    obj: T,
+    func: (value: Value<T>, key: Key<T>, i: number) => U
 ) => mapObj(obj, ([key, value], i) => [key, func(value, key, i)]);
