@@ -38,6 +38,15 @@ export const getMinObj = <T>(objects: T[], getValue: (t: T) => number): T | unde
     return result;
 };
 
+export const removeSimilar = <T>(values: T[], isSimilar: (a: T, b: T) => boolean): T[] => {
+    const result: T[] = [];
+    values.forEach(value => {
+        if (result.some(v => isSimilar(v, value))) return;
+        result.push(value);
+    });
+    return result;
+};
+
 export const swap = <T>(objects: T[], i: number, j: number) => {
     const [oi, oj] = [get(objects, i), get(objects, j)];
     [objects[i], objects[j]] = [oj, oi];

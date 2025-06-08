@@ -1,4 +1,4 @@
-import { getMinObj, swap } from "./basic.js";
+import { getMinObj, removeSimilar, swap } from "./basic.js";
 
 it("gets the smallest value", () => {
     expect(getMinObj([2, 1, 3], v => v)).toBe(1);
@@ -13,4 +13,8 @@ it("swaps", () => {
     const array = [1, 2];
     swap(array, 0, 1);
     expect(array).toStrictEqual([2, 1]);
+});
+
+it("removes similar values", () => {
+    expect(removeSimilar([1, 2, 3, 2, 1], (a, b) => a === b)).toStrictEqual([1, 2, 3]);
 });
