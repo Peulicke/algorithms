@@ -21,7 +21,5 @@ export const fromEntries = <T extends object>(entries: Entry<T>[]) => Object.fro
 export const mapObj = <T extends object, U extends object>(obj: T, func: (entry: Entry<T>, i: number) => Entry<U>): U =>
     fromEntries(getEntries(obj).map(([key, value], i) => func([key, value], i)));
 
-export const mapObjValues = <T extends object, U extends { [K in Key<T>]: unknown }>(
-    obj: T,
-    func: (value: Value<T>, key: Key<T>, i: number) => Value<U>
-) => mapObj<T, U>(obj, ([key, value], i) => [key, func(value, key, i)]);
+export const mapObjValues = <T extends object, U>(obj: T, func: (value: Value<T>, key: Key<T>, i: number) => U) =>
+    mapObj<T, { [K in Key<T>]: U }>(obj, ([key, value], i) => [key, func(value, key, i)]);
