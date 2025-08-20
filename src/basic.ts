@@ -38,6 +38,16 @@ export const getMinObj = <T>(objects: T[], getValue: (t: T) => number): T | unde
     return result;
 };
 
+export const removeSimilarFromSortedArray = <T>(sortedValues: T[], isSimilar: (a: T, b: T) => boolean): T[] => {
+    const result: T[] = [];
+    sortedValues.forEach((value, i) => {
+        const nextValue = sortedValues[i + 1];
+        if (nextValue !== undefined && isSimilar(value, nextValue)) return;
+        result.push(value);
+    });
+    return result;
+};
+
 export const removeSimilar = <T>(values: T[], isSimilar: (a: T, b: T) => boolean): T[] => {
     const result: T[] = [];
     values.forEach(value => {
