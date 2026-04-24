@@ -5,7 +5,7 @@ import { createNestedSet } from "./nested-set.js";
 type Graph<Node, NodeId> = {
     getNodeId: (node: Node) => NodeId[];
     getNeighbors: (node: Node) => Node[];
-    getDist: (a: Node, b: Node) => number;
+    getDist: (from: Node, to: Node) => number;
 };
 
 const areArraysEqual = (a: unknown[], b: unknown[]): boolean =>
@@ -27,7 +27,7 @@ export const aStar = <Node, NodeId>(
     const checked = createNestedSet<NodeId>();
     const map = createNestedMap<NodeId, Node>();
     const queue = new TinyQueue(
-        targets.map(node => ({ node, prevNode: node, dist: 0, totalDistEstimate: graph.getDist(node, start) })),
+        targets.map(node => ({ node, prevNode: node, dist: 0, totalDistEstimate: graph.getDist(start, node) })),
         (a, b) => a.totalDistEstimate - b.totalDistEstimate
     );
     const startNodeId = graph.getNodeId(start);
@@ -41,12 +41,12 @@ export const aStar = <Node, NodeId>(
         map.set(nodeId, prevNode);
         if (areArraysEqual(nodeId, startNodeId)) break;
         graph.getNeighbors(node).forEach(neighbor => {
-            const nextDist = dist + graph.getDist(node, neighbor);
+            const nextDist = dist + graph.getDist(neighbor, node);
             queue.push({
                 prevNode: node,
                 node: neighbor,
                 dist: nextDist,
-                totalDistEstimate: nextDist + graph.getDist(neighbor, start)
+                totalDistEstimate: nextDist + graph.getDist(start, neighbor)
             });
         });
     }

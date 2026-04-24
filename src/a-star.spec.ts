@@ -6,7 +6,7 @@ it("finds the shortest path", () => {
         aStar<number, number>(
             {
                 getNodeId: node => [node],
-                getDist: (a, b) => Math.abs(a - b),
+                getDist: (from, to) => Math.abs(from - to),
                 getNeighbors: node => [node - 1, node + 1]
             },
             0,
