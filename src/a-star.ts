@@ -11,11 +11,18 @@ type Graph<Node, NodeId> = {
 const areArraysEqual = (a: unknown[], b: unknown[]): boolean =>
     a.length === b.length && a.every((aValue, i) => aValue === b[i]);
 
-const generatePath = <Node, NodeId>(graph: Graph<Node, NodeId>, map: NestedMap<NodeId, Node>, start: Node): Node[] => {
+const generatePath = <Node, NodeId>(
+    graph: Graph<Node, NodeId>,
+    map: NestedMap<NodeId, Node>,
+    start: Node
+): Node[] | undefined => {
     const startNodeId = graph.getNodeId(start);
-    const nextPos = map.get(startNodeId) ?? start;
+    const nextPos = map.get(startNodeId);
+    if (nextPos === undefined) return undefined;
     if (areArraysEqual(graph.getNodeId(nextPos), startNodeId)) return [];
-    return [nextPos, ...generatePath(graph, map, nextPos)];
+    const subpath = generatePath(graph, map, nextPos);
+    if (subpath === undefined) throw new Error("Found no subpath");
+    return [nextPos, ...subpath];
 };
 
 export const aStar = <Node, NodeId>(
@@ -23,7 +30,7 @@ export const aStar = <Node, NodeId>(
     start: Node,
     targets: Node[],
     maxIterations = Infinity
-): Node[] => {
+): Node[] | undefined => {
     const checked = createNestedSet<NodeId>();
     const map = createNestedMap<NodeId, Node>();
     const queue = new TinyQueue(
