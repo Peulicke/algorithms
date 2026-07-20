@@ -63,3 +63,7 @@ export const swap = <T>(objects: T[], i: number, j: number) => {
 };
 
 export const clamp = (value: number, from: number, to: number): number => Math.min(Math.max(value, from), to);
+export const zip = <A, B>(a: A[], b: B[]): [A, B][] => {
+    if (a.length !== b.length) throw new Error(`Arrays have different lengths: ${a.length} != ${b.length}`);
+    return a.map((_, i) => [a[i]!, b[i]!]);
+};

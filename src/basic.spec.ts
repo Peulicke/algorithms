@@ -1,4 +1,4 @@
-import { getMinObj, removeSimilar, removeSimilarFromSortedArray, swap } from "./basic.js";
+import { getMinObj, removeSimilar, removeSimilarFromSortedArray, swap, zip } from "./basic.js";
 
 it("gets the smallest value", () => {
     expect(getMinObj([2, 1, 3], v => v)).toBe(1);
@@ -21,4 +21,14 @@ it("removes similar values", () => {
 
 it("removes similar values from sorted array", () => {
     expect(removeSimilarFromSortedArray([1, 1, 2, 2, 3], (a, b) => a === b)).toStrictEqual([1, 2, 3]);
+});
+
+it("zips", () => {
+    expect(zip([], [])).toStrictEqual([]);
+    expect(zip([1, 2, 3], ["a", "b", "c"])).toStrictEqual([
+        [1, "a"],
+        [2, "b"],
+        [3, "c"]
+    ]);
+    expect(() => zip([1, 2, 3], ["a", "b"])).toThrow();
 });
